@@ -1,0 +1,13 @@
+package io.github.roony.modules.auth.api.dto;
+
+import lombok.Data;
+
+@Data
+public class UsuarioRequest 
+{
+    private String email;
+    private String password;
+    private String nombre;
+    private String telefono;
+    private Long empresaId;
+}
