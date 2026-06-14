@@ -4,22 +4,20 @@ Aplicación de monitoreo de temperatura con arquitectura de **monolito modular**
 
 ## Arquitectura
 
-```mermaid
-graph TD
+graph LR
     subgraph Kernel["kernel (código común)"]
-        security["security/<br/>JWT, PasswordHasher,<br/>TokenUser, Roles"]
-        exception["shared/exception/<br/>AppException, ErrorCode,<br/>Mappers"]
+        Security["security"]
+        Exceptions["shared/exception"]
     end
 
-    subgraph Auth["modules/auth"]
-        api["api/<br/>REST, DTOs"]
-        core["core/<br/>Servicios, Dominio"]
-        infra["infrastructure/<br/>Panache Repositories"]
+    subgraph Module["módulo (ej: auth)"]
+        API["api"]
+        Core["core"]
+        Infra["infrastructure"]
     end
 
-    Auth --> Kernel
-    api --> core --> infra
-```
+    Module --> Kernel
+    API --> Core --> Infra
 
 Cada módulo mantiene su propia arquitectura limpia interna (`api | core | infrastructure`) y comparte código transversal a través del **kernel** (seguridad, errores).
 
