@@ -3,15 +3,23 @@
 Aplicación de monitoreo de temperatura con arquitectura de **monolito modular** y **Shared Kernel**, construida con [Quarkus](https://quarkus.io/).
 
 ## Arquitectura
-temp-monitor/
-├── kernel/ ← Código común compartido entre módulos
-│ ├── security/ ← JWT, PasswordHasher, TokenUser, Roles
-│ └── shared/exception/ ← Manejo centralizado de errores (AppException, ErrorCode, mappers)
-└── modules/
-└── auth/ ← Módulo de autenticación y gestión de usuarios
-├── api/ ← Adaptadores de entrada (REST, DTOs)
-├── core/ ← Lógica de negocio (servicios, modelo de dominio, puertos)
-└── infrastructure/ ← Adaptadores de salida (repositorios Panache, etc.)
+
+```mermaid
+graph TD
+    subgraph Kernel["kernel (código común)"]
+        security["security/<br/>JWT, PasswordHasher,<br/>TokenUser, Roles"]
+        exception["shared/exception/<br/>AppException, ErrorCode,<br/>Mappers"]
+    end
+
+    subgraph Auth["modules/auth"]
+        api["api/<br/>REST, DTOs"]
+        core["core/<br/>Servicios, Dominio"]
+        infra["infrastructure/<br/>Panache Repositories"]
+    end
+
+    Auth --> Kernel
+    api --> core --> infra
+```
 
 Cada módulo mantiene su propia arquitectura limpia interna (`api | core | infrastructure`) y comparte código transversal a través del **kernel** (seguridad, errores).
 
