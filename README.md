@@ -4,6 +4,7 @@ Aplicación de monitoreo de temperatura con arquitectura de **monolito modular**
 
 ## Arquitectura
 
+```mermaid
 graph LR
     subgraph Kernel["kernel (código común)"]
         Security["security"]
@@ -18,6 +19,7 @@ graph LR
 
     Module --> Kernel
     API --> Core --> Infra
+```
 
 Cada módulo mantiene su propia arquitectura limpia interna (`api | core | infrastructure`) y comparte código transversal a través del **kernel** (seguridad, errores).
 
