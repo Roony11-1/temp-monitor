@@ -8,8 +8,7 @@ import java.util.stream.Collectors;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import io.github.roony.kernel.shared.exception.AppException;
-import io.github.roony.kernel.shared.exception.ErrorCode;
+import io.github.roony.error.core.exceptions.InternalErrorException;
 import io.smallrye.jwt.build.Jwt;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +30,7 @@ public class JwtGenerator
                 .collect(Collectors.toSet());
 
         if (rolNames.isEmpty())
-            throw new AppException(ErrorCode.ERROR_INTERNO, "El usuario no tiene roles asignados");
+            throw new InvalidTokenUserException("El usuario no tiene roles asignados");
 
         try 
         {
@@ -48,7 +47,7 @@ public class JwtGenerator
         catch (Exception e) 
         {
             log.error("Error al generar el token JWT", e);
-            throw new AppException(ErrorCode.ERROR_INTERNO, "Error al generar el token de autenticación");
+            throw new InternalErrorException("generar el token JWT", e);
         }
     }
 }

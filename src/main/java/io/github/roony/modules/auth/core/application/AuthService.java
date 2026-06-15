@@ -2,10 +2,12 @@ package io.github.roony.modules.auth.core.application;
 
 import java.time.Instant;
 
+import io.github.roony.error.core.exceptions.InternalErrorException;
 import io.github.roony.kernel.security.JwtGenerator;
 import io.github.roony.kernel.security.PasswordHasher;
-import io.github.roony.kernel.shared.exception.AppException;
-import io.github.roony.kernel.shared.exception.ErrorCode;
+import io.github.roony.modules.auth.core.domain.exceptions.InvalidCredentialsException;
+import io.github.roony.modules.auth.core.domain.exceptions.UserDisabledException;
+import io.github.roony.modules.auth.core.domain.exceptions.UserNotFoundException;
 import io.github.roony.modules.auth.core.domain.repository.UsuarioRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
@@ -29,27 +31,34 @@ public class AuthService
         var usuario = usuarioRepository.findByEmail(email)
             .orElseThrow(() -> {
                 log.warn("Usuario no encontrado: {}", email);
-                return new AppException(ErrorCode.CREDENCIALES_INVALIDAS);
+                return new UserNotFoundException(email);
             });
 
         if (!usuario.isActivo()) 
         {
             log.warn("Usuario desactivado: {}", email);
-            throw new AppException(ErrorCode.USUARIO_DESACTIVADO);
+            throw new UserDisabledException();
         }
 
         if (!passwordHasher.verify(password, usuario.getPasswordHash())) 
         {
             log.warn("Password incorrecto para email: {}", email);
-            throw new AppException(ErrorCode.CREDENCIALES_INVALIDAS);
+            throw new InvalidCredentialsException();
         }
 
         usuario.setLastLogin(Instant.now());
         usuarioRepository.persist(usuario);
 
-        String token = jwtGenerator.generate(usuario);
-        log.info("Login exitoso para email: {}", email);
-
-        return token;
+        try 
+        {
+            String token = jwtGenerator.generate(usuario);
+            log.info("Login exitoso para email: {}", email);
+            return token;
+        } 
+        catch (Exception e) 
+        {
+            log.error("Error al generar el token JWT", e);
+            throw new InternalErrorException("generar el token JWT", e);
+        }
     }
 }

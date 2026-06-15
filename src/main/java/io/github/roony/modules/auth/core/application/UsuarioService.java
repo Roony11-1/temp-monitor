@@ -2,8 +2,8 @@ package io.github.roony.modules.auth.core.application;
 
 import io.github.roony.kernel.security.PasswordHasher;
 import io.github.roony.kernel.security.Rol;
-import io.github.roony.kernel.shared.exception.AppException;
-import io.github.roony.kernel.shared.exception.ErrorCode;
+import io.github.roony.modules.auth.core.domain.exceptions.EmailAlreadyExistsException;
+import io.github.roony.modules.auth.core.domain.exceptions.UserNotFoundException;
 import io.github.roony.modules.auth.core.domain.model.Usuario;
 import io.github.roony.modules.auth.core.domain.repository.UsuarioRepository;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -29,14 +29,14 @@ public class UsuarioService
     public Usuario buscarPorId(Long id) 
     {
         return usuarioRepository.findByIdOptional(id)
-                .orElseThrow(() -> new AppException(ErrorCode.USUARIO_NO_ENCONTRADO));
+                .orElseThrow(() -> new UserNotFoundException("ID " + id));
     }
 
     @Transactional
     public Usuario crear(String email, String password, String nombre, Long empresaId) 
     {
         if (usuarioRepository.existsByEmail(email))
-            throw new AppException(ErrorCode.EMAIL_DUPLICADO);
+            throw new EmailAlreadyExistsException(email);
 
         Usuario usuario = Usuario.builder()
                 .email(email)
@@ -95,7 +95,7 @@ public class UsuarioService
     public void eliminar(Long id) 
     {
         if (!usuarioRepository.existsById(id)) 
-            throw new AppException(ErrorCode.USUARIO_NO_ENCONTRADO);
+            throw new UserNotFoundException("ID " + id);
 
         usuarioRepository.deleteById(id);
     }
