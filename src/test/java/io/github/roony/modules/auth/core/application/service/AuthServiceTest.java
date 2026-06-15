@@ -19,15 +19,15 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import io.github.roony.error.core.exceptions.InternalErrorException;
-import io.github.roony.kernel.security.JwtGenerator;
-import io.github.roony.kernel.security.PasswordHasher;
-import io.github.roony.kernel.security.Rol;
-import io.github.roony.modules.auth.core.application.AuthService;
-import io.github.roony.modules.auth.core.domain.exceptions.InvalidCredentialsException;
-import io.github.roony.modules.auth.core.domain.exceptions.UserDisabledException;
-import io.github.roony.modules.auth.core.domain.exceptions.UserNotFoundException;
-import io.github.roony.modules.auth.core.domain.model.Usuario;
-import io.github.roony.modules.auth.core.domain.repository.UsuarioRepository;
+import io.github.roony11_1.kernel.security.JwtGenerator;
+import io.github.roony11_1.kernel.security.PasswordHasher;
+import io.github.roony11_1.kernel.security.Rol;
+import io.github.roony11_1.modules.auth.core.application.AuthService;
+import io.github.roony11_1.modules.auth.core.domain.exceptions.InvalidCredentialsException;
+import io.github.roony11_1.modules.auth.core.domain.exceptions.UserDisabledException;
+import io.github.roony11_1.modules.auth.core.domain.exceptions.UserNotFoundException;
+import io.github.roony11_1.modules.auth.core.domain.model.Usuario;
+import io.github.roony11_1.modules.auth.core.domain.repository.UsuarioRepository;
 
 @ExtendWith(MockitoExtension.class)
 public class AuthServiceTest 

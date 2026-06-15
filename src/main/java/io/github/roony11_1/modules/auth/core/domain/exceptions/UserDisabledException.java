@@ -1,0 +1,12 @@
+package io.github.roony11_1.modules.auth.core.domain.exceptions;
+
+import io.github.roony.error.core.StandardErrorCategories;
+import io.github.roony.error.core.exceptions.AppException;
+
+public class UserDisabledException extends AppException
+{
+    public UserDisabledException() 
+    {
+        super("AUTH-002", "Usuario desactivado", StandardErrorCategories.ACCESS_DENIED, "Usuario desactivado. Contacte al administrador.");
+    }
+}
