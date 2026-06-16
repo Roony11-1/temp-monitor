@@ -18,7 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import io.github.roony.error.core.exceptions.InternalErrorException;
+import io.github.roony11_1.error.core.exceptions.InternalErrorException;
 import io.github.roony11_1.kernel.security.JwtGenerator;
 import io.github.roony11_1.kernel.security.PasswordHasher;
 import io.github.roony11_1.kernel.security.Rol;

@@ -2,7 +2,7 @@ package io.github.roony11_1.modules.auth.core.application;
 
 import java.time.Instant;
 
-import io.github.roony.error.core.exceptions.InternalErrorException;
+import io.github.roony11_1.error.core.exceptions.InternalErrorException;
 import io.github.roony11_1.kernel.security.JwtGenerator;
 import io.github.roony11_1.kernel.security.PasswordHasher;
 import io.github.roony11_1.modules.auth.core.domain.exceptions.InvalidCredentialsException;

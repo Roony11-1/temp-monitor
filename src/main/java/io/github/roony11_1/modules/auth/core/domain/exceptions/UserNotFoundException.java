@@ -1,9 +1,9 @@
 package io.github.roony11_1.modules.auth.core.domain.exceptions;
 
-import io.github.roony.error.core.StandardErrorCategories;
-import io.github.roony.error.core.exceptions.AppException;
+import io.github.roony11_1.error.core.StandardErrorCategories;
+import io.github.roony11_1.error.core.exceptions.AppException;
 
-public class UserNotFoundException extends AppException 
+public class UserNotFoundException extends AppException
 {
     public UserNotFoundException(String email) 
     {

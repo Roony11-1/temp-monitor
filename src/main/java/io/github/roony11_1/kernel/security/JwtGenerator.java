@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import io.github.roony.error.core.exceptions.InternalErrorException;
+import io.github.roony11_1.error.core.exceptions.InternalErrorException;
 import io.smallrye.jwt.build.Jwt;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.extern.slf4j.Slf4j;

@@ -1,6 +1,6 @@
 package io.github.roony11_1.modules.auth.infrastructure.config;
 
-import io.github.roony.error.quarkus.HttpStatusRegistry;
+import io.github.roony11_1.error.rest.HttpStatusRegistry;
 import io.github.roony11_1.kernel.security.SecurityErrorCategories;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;

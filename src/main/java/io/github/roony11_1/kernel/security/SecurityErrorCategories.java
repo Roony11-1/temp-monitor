@@ -1,6 +1,6 @@
 package io.github.roony11_1.kernel.security;
 
-import io.github.roony.error.core.ErrorCategory;
+import io.github.roony11_1.error.core.ErrorCategory;
 
 public final class SecurityErrorCategories 
 {
