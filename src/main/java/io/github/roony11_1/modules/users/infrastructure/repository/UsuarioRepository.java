@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @ApplicationScoped
 @RequiredArgsConstructor
-public class UsuarioRepositoryAdapter implements IUsuarioRepository
+public class UsuarioRepository implements IUsuarioRepository
 {
     private final IPanacheUsuarioRepository panacheRepository;
 

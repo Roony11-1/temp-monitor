@@ -42,7 +42,7 @@ public class JwtGenerator
             if (user.getEmpresaId() != null) 
                 jwt.claim("empresaId", user.getEmpresaId());
 
-            return jwt.signWithSecret("ezkyO/2l7ExQ5LfJYgGT1dVtF1WGAFMAY6vtvomGmxY=");
+            return jwt.sign();
         } 
         catch (Exception e) 
         {
