@@ -1,4 +1,4 @@
-package io.github.roony11_1.modules.auth.core.application;
+package io.github.roony11_1.modules.users.core.application;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
@@ -10,16 +10,16 @@ import java.util.Set;
 
 import io.github.roony11_1.kernel.security.PasswordHasher;
 import io.github.roony11_1.kernel.security.Rol;
-import io.github.roony11_1.modules.auth.core.domain.exceptions.EmailAlreadyExistsException;
-import io.github.roony11_1.modules.auth.core.domain.exceptions.UserNotFoundException;
-import io.github.roony11_1.modules.auth.core.domain.model.Usuario;
-import io.github.roony11_1.modules.auth.core.domain.repository.UsuarioRepository;
+import io.github.roony11_1.modules.users.core.domain.exceptions.EmailAlreadyExistsException;
+import io.github.roony11_1.modules.users.core.domain.exceptions.UserNotFoundException;
+import io.github.roony11_1.modules.users.core.domain.model.Usuario;
+import io.github.roony11_1.modules.users.core.domain.repository.IUsuarioRepository;
 
 @ApplicationScoped
 @RequiredArgsConstructor
 public class UsuarioService 
 {
-    private final UsuarioRepository usuarioRepository;
+    private final IUsuarioRepository usuarioRepository;
     private final PasswordHasher passwordHasher;
 
     public List<Usuario> listarTodos() 
@@ -48,7 +48,7 @@ public class UsuarioService
                 .activo(true)
                 .build();
 
-        usuarioRepository.persist(usuario);
+        usuarioRepository.save(usuario);
         return usuario;
     }
 
@@ -61,7 +61,7 @@ public class UsuarioService
         usuario.setTelefono(telefono);
         usuario.setEmpresaId(empresaId);
         usuario.setUpdatedAt(Instant.now());
-        usuarioRepository.persist(usuario);
+        usuarioRepository.save(usuario);
         return usuario;
     }
 
@@ -71,7 +71,7 @@ public class UsuarioService
         Usuario usuario = buscarPorId(id);
         usuario.setPasswordHash(passwordHasher.hash(nuevaPassword));
         usuario.setUpdatedAt(Instant.now());
-        usuarioRepository.persist(usuario);
+        usuarioRepository.save(usuario);
     }
 
     @Transactional
@@ -80,7 +80,7 @@ public class UsuarioService
         Usuario usuario = buscarPorId(id);
         usuario.setActivo(true);
         usuario.setUpdatedAt(Instant.now());
-        usuarioRepository.persist(usuario);
+        usuarioRepository.save(usuario);
     }
 
     @Transactional
@@ -89,15 +89,14 @@ public class UsuarioService
         Usuario usuario = buscarPorId(id);
         usuario.setActivo(false);
         usuario.setUpdatedAt(Instant.now());
-        usuarioRepository.persist(usuario);
+        usuarioRepository.save(usuario);
     }
 
     @Transactional
     public void eliminar(Long id) 
     {
-        if (!usuarioRepository.existsById(id)) 
-            throw new UserNotFoundException("ID " + id);
+        var usuario = buscarPorId(id);
 
-        usuarioRepository.deleteById(id);
+        usuarioRepository.delete(usuario);
     }
 }

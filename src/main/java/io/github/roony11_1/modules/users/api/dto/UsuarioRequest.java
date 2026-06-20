@@ -1,4 +1,4 @@
-package io.github.roony11_1.modules.auth.api.dto;
+package io.github.roony11_1.modules.users.api.dto;
 
 import lombok.Data;
 

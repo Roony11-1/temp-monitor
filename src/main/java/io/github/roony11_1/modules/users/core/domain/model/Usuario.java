@@ -1,4 +1,4 @@
-package io.github.roony11_1.modules.auth.core.domain.model;
+package io.github.roony11_1.modules.users.core.domain.model;
 
 import java.time.Instant;
 import java.util.HashSet;

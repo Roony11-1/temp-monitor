@@ -1,4 +1,4 @@
-package io.github.roony11_1.modules.auth.api.rest;
+package io.github.roony11_1.modules.users.api.rest;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -9,10 +9,10 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.github.roony11_1.modules.auth.api.dto.UsuarioRequest;
-import io.github.roony11_1.modules.auth.api.dto.UsuarioResponse;
-import io.github.roony11_1.modules.auth.core.application.UsuarioService;
-import io.github.roony11_1.modules.auth.core.domain.model.Usuario;
+import io.github.roony11_1.modules.users.api.dto.UsuarioRequest;
+import io.github.roony11_1.modules.users.api.dto.UsuarioResponse;
+import io.github.roony11_1.modules.users.core.application.UsuarioService;
+import io.github.roony11_1.modules.users.core.domain.model.Usuario;
 
 @Path("/api/usuarios")
 @Produces(MediaType.APPLICATION_JSON)
