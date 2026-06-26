@@ -1,4 +1,4 @@
-package io.github.roony11_1.temp_monitor.kernel.security;
+package io.github.roony11_1.temp_monitor.kernel.security.crypto;
 
 import org.mindrot.jbcrypt.BCrypt;
 

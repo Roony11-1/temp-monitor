@@ -9,6 +9,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import io.github.roony11_1.temp_monitor.modules.users.api.dto.CambiarPasswordRequest;
 import io.github.roony11_1.temp_monitor.modules.users.api.dto.UsuarioRequest;
 import io.github.roony11_1.temp_monitor.modules.users.api.dto.UsuarioResponse;
 import io.github.roony11_1.temp_monitor.modules.users.core.application.UsuarioService;
@@ -45,7 +46,9 @@ public class UsuarioResource
             request.getEmail(),
             request.getPassword(),
             request.getNombre(),
-            request.getEmpresaId()
+            request.getEmpresaId(),
+            request.getSucursalId(),
+            request.getRoles()
         );
         
         UsuarioResponse response = toResponse(usuario);
@@ -62,16 +65,18 @@ public class UsuarioResource
             id,
             request.getNombre(),
             request.getTelefono(),
-            request.getEmpresaId()
+            request.getEmpresaId(),
+            request.getSucursalId(),
+            request.getRoles()
         );
         return toResponse(usuario);
     }
 
     @POST
     @Path("/{id}/password")
-    public Response cambiarPassword(@PathParam("id") Long id, String nuevaPassword) 
+    public Response cambiarPassword(@PathParam("id") Long id, CambiarPasswordRequest request) 
     {
-        usuarioService.cambiarPassword(id, nuevaPassword);
+        usuarioService.cambiarPassword(id, request.getNuevaPassword());
         return Response.ok().build();
     }
 
@@ -108,6 +113,7 @@ public class UsuarioResource
         response.setTelefono(usuario.getTelefono());
         response.setRoles(usuario.getRoles());
         response.setEmpresaId(usuario.getEmpresaId());
+        response.setSucursalId(usuario.getSucursalId());
         response.setActivo(usuario.isActivo());
         response.setCreatedAt(usuario.getCreatedAt());
         response.setLastLogin(usuario.getLastLogin());

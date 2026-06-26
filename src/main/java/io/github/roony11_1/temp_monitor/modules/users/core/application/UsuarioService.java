@@ -8,8 +8,8 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Set;
 
-import io.github.roony11_1.temp_monitor.kernel.security.PasswordHasher;
-import io.github.roony11_1.temp_monitor.kernel.security.Rol;
+import io.github.roony11_1.temp_monitor.kernel.security.crypto.PasswordHasher;
+import io.github.roony11_1.temp_monitor.kernel.security.model.Rol;
 import io.github.roony11_1.temp_monitor.modules.users.core.domain.exceptions.EmailAlreadyExistsException;
 import io.github.roony11_1.temp_monitor.modules.users.core.domain.exceptions.UserNotFoundException;
 import io.github.roony11_1.temp_monitor.modules.users.core.domain.model.Usuario;
@@ -34,7 +34,7 @@ public class UsuarioService
     }
 
     @Transactional
-    public Usuario crear(String email, String password, String nombre, Long empresaId) 
+    public Usuario crear(String email, String password, String nombre, Long empresaId, Long sucursalId, Set<Rol> roles) 
     {
         if (usuarioRepository.existsByEmail(email))
             throw new EmailAlreadyExistsException(email);
@@ -43,8 +43,9 @@ public class UsuarioService
                 .email(email)
                 .passwordHash(passwordHasher.hash(password))
                 .nombre(nombre)
-                .roles(Set.of(Rol.USUARIO))
+                .roles(roles)
                 .empresaId(empresaId)
+                .sucursalId(sucursalId)
                 .activo(true)
                 .build();
 
@@ -53,13 +54,18 @@ public class UsuarioService
     }
 
     @Transactional
-    public Usuario actualizar(Long id, String nombre, String telefono, Long empresaId) 
+    public Usuario actualizar(Long id, String nombre, String telefono, Long empresaId, Long sucursalId, Set<Rol> roles) 
     {
         Usuario usuario = buscarPorId(id);
 
         usuario.setNombre(nombre);
         usuario.setTelefono(telefono);
         usuario.setEmpresaId(empresaId);
+        usuario.setSucursalId(sucursalId);
+        if (roles != null && !roles.isEmpty()) 
+        {
+            usuario.setRoles(roles);
+        }
         usuario.setUpdatedAt(Instant.now());
         usuarioRepository.save(usuario);
         return usuario;

@@ -4,8 +4,8 @@ import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
-import io.github.roony11_1.temp_monitor.kernel.security.Rol;
-import io.github.roony11_1.temp_monitor.kernel.security.TokenUser;
+import io.github.roony11_1.temp_monitor.kernel.security.model.Rol;
+import io.github.roony11_1.temp_monitor.kernel.security.model.TokenUser;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -48,6 +48,8 @@ public class Usuario extends PanacheEntity implements TokenUser
     private String telefono;
 
     private Long empresaId;
+
+    private Long sucursalId;
 
     @Builder.Default
     private Instant createdAt = Instant.now();

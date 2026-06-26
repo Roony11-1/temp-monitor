@@ -2,9 +2,9 @@ package io.github.roony11_1.temp_monitor.modules.users.core.application;
 
 import java.time.Instant;
 
-import io.github.roony11_1.temp_monitor.kernel.security.IUserCredentialsService;
-import io.github.roony11_1.temp_monitor.kernel.security.PasswordHasher;
-import io.github.roony11_1.temp_monitor.kernel.security.TokenUser;
+import io.github.roony11_1.temp_monitor.kernel.security.crypto.PasswordHasher;
+import io.github.roony11_1.temp_monitor.kernel.security.model.TokenUser;
+import io.github.roony11_1.temp_monitor.kernel.security.service.IUserCredentialsService;
 import io.github.roony11_1.temp_monitor.modules.users.core.domain.exceptions.InvalidCredentialsException;
 import io.github.roony11_1.temp_monitor.modules.users.core.domain.exceptions.UserDisabledException;
 import io.github.roony11_1.temp_monitor.modules.users.core.domain.exceptions.UserNotFoundException;

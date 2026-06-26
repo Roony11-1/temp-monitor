@@ -1,9 +1,9 @@
 package io.github.roony11_1.temp_monitor.modules.auth.core.application;
 
 import io.github.roony11_1.error.core.exceptions.InternalErrorException;
-import io.github.roony11_1.temp_monitor.kernel.security.IUserCredentialsService;
-import io.github.roony11_1.temp_monitor.kernel.security.JwtGenerator;
-import io.github.roony11_1.temp_monitor.kernel.security.TokenUser;
+import io.github.roony11_1.temp_monitor.kernel.security.jwt.JwtGenerator;
+import io.github.roony11_1.temp_monitor.kernel.security.model.TokenUser;
+import io.github.roony11_1.temp_monitor.kernel.security.service.IUserCredentialsService;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

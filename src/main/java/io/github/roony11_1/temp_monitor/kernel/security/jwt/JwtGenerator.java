@@ -1,4 +1,4 @@
-package io.github.roony11_1.temp_monitor.kernel.security;
+package io.github.roony11_1.temp_monitor.kernel.security.jwt;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -9,6 +9,9 @@ import java.util.stream.Collectors;
 import javax.crypto.SecretKey;
 
 import io.github.roony11_1.error.core.exceptions.InternalErrorException;
+import io.github.roony11_1.temp_monitor.kernel.security.exception.InvalidTokenUserException;
+import io.github.roony11_1.temp_monitor.kernel.security.model.Rol;
+import io.github.roony11_1.temp_monitor.kernel.security.model.TokenUser;
 import io.smallrye.jwt.build.Jwt;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -53,6 +56,11 @@ public class JwtGenerator
             if (user.getEmpresaId() != null) 
             {
                 builder.claim("empresaId", user.getEmpresaId());
+            }
+
+            if (user.getSucursalId() != null) 
+            {
+                builder.claim("sucursalId", user.getSucursalId());
             }
 
             return builder.sign(key);

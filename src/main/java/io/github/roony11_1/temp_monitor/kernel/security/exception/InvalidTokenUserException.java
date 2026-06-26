@@ -1,6 +1,7 @@
-package io.github.roony11_1.temp_monitor.kernel.security;
+package io.github.roony11_1.temp_monitor.kernel.security.exception;
 
 import io.github.roony11_1.error.core.exceptions.AppException;
+import io.github.roony11_1.temp_monitor.kernel.security.error.SecurityErrorCategories;
 
 public class InvalidTokenUserException extends AppException
 {

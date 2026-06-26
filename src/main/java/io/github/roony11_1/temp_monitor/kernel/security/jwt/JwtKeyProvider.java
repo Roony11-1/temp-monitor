@@ -1,4 +1,4 @@
-package io.github.roony11_1.temp_monitor.kernel.security;
+package io.github.roony11_1.temp_monitor.kernel.security.jwt;
 
 import java.util.Base64;
 
