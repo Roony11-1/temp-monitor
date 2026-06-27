@@ -1,36 +1,32 @@
 package io.github.roony11_1.temp_monitor.kernel.security.jwt;
 
+import io.github.roony11_1.error.core.exceptions.InternalErrorException;
+import io.github.roony11_1.temp_monitor.config.JwtConfig;
+import io.github.roony11_1.temp_monitor.kernel.security.exception.InvalidTokenUserException;
+import io.github.roony11_1.temp_monitor.kernel.security.model.Rol;
+import io.github.roony11_1.temp_monitor.kernel.security.model.TokenUser;
+import io.jsonwebtoken.Jwts;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
+import javax.crypto.SecretKey;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.crypto.SecretKey;
-
-import io.github.roony11_1.error.core.exceptions.InternalErrorException;
-import io.github.roony11_1.temp_monitor.kernel.security.exception.InvalidTokenUserException;
-import io.github.roony11_1.temp_monitor.kernel.security.model.Rol;
-import io.github.roony11_1.temp_monitor.kernel.security.model.TokenUser;
-import io.smallrye.jwt.build.Jwt;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
-@ApplicationScoped
+@Component
 @RequiredArgsConstructor
 @Slf4j
-public class JwtGenerator 
-{
+public class JwtGenerator {
+
     private final JwtKeyProvider keyProvider;
+    private final JwtConfig jwtConfig;
 
-    @Inject
-    @org.eclipse.microprofile.config.inject.ConfigProperty(name = "jwt.expiration-hours", defaultValue = "24")
-    Long expirationHours;
-
-    public String generate(TokenUser user) 
-    {
+    public String generate(TokenUser user) {
         Objects.requireNonNull(user.getId(), "El usuario no tiene ID");
         Objects.requireNonNull(user.getEmail(), "El usuario no tiene email");
 
@@ -39,35 +35,31 @@ public class JwtGenerator
                 .map(Rol::name)
                 .collect(Collectors.toSet());
 
-        if (roles.isEmpty()) 
-        {
+        if (roles.isEmpty()) {
             throw new InvalidTokenUserException("El usuario no tiene roles asignados");
         }
 
-        try 
-        {
+        try {
             SecretKey key = keyProvider.getHmacKey();
 
-            var builder = Jwt.issuer("temp-monitor")
+            var builder = Jwts.builder()
+                    .issuer("temp-monitor")
                     .subject(user.getId().toString())
+                    .claim("email", user.getEmail())
                     .claim("roles", roles)
-                    .expiresAt(Instant.now().plus(Duration.ofHours(expirationHours)));
+                    .issuedAt(new Date())
+                    .expiration(Date.from(Instant.now().plus(Duration.ofHours(jwtConfig.getExpirationHours()))));
 
-            if (user.getEmpresaId() != null) 
-            {
+            if (user.getEmpresaId() != null) {
                 builder.claim("empresaId", user.getEmpresaId());
             }
 
-            if (user.getSucursalId() != null) 
-            {
+            if (user.getSucursalId() != null) {
                 builder.claim("sucursalId", user.getSucursalId());
             }
 
-            return builder.sign(key);
-
-        } 
-        catch (Exception e) 
-        {
+            return builder.signWith(key).compact();
+        } catch (Exception e) {
             log.error("Error al generar JWT para userId={}", user.getId(), e);
             throw new InternalErrorException("generar el token JWT", e);
         }

@@ -1,27 +1,27 @@
 package io.github.roony11_1.temp_monitor.kernel.security.crypto;
 
-import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
-import jakarta.enterprise.context.ApplicationScoped;
+@Component
+public class PasswordHasher {
 
-@ApplicationScoped
-public class PasswordHasher 
-{
-    private static final int LOG_ROUNDS = 12;
-    
-    public String hash(String password) 
-    {
-        if (password == null || password.isEmpty()) 
-            throw new IllegalArgumentException("Password no puede ser null o vacío");
+    private final PasswordEncoder passwordEncoder;
 
-        return BCrypt.hashpw(password, BCrypt.gensalt(LOG_ROUNDS));
+    public PasswordHasher(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
     }
-    
-    public boolean verify(String password, String hash) 
-    {
+
+    public String hash(String password) {
+        if (password == null || password.isEmpty())
+            throw new IllegalArgumentException("Password no puede ser null o vacío");
+        return passwordEncoder.encode(password);
+    }
+
+    public boolean verify(String password, String hash) {
         if (password == null || hash == null)
             return false;
-        
-        return BCrypt.checkpw(password, hash);
+        return passwordEncoder.matches(password, hash);
     }
 }
+

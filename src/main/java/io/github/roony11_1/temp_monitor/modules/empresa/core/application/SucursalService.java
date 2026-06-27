@@ -1,46 +1,41 @@
 package io.github.roony11_1.temp_monitor.modules.empresa.core.application;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-
-import java.time.Instant;
-import java.util.List;
-
 import io.github.roony11_1.temp_monitor.modules.empresa.core.domain.exceptions.EmpresaNotFoundException;
 import io.github.roony11_1.temp_monitor.modules.empresa.core.domain.exceptions.SucursalNotFoundException;
 import io.github.roony11_1.temp_monitor.modules.empresa.core.domain.model.Empresa;
 import io.github.roony11_1.temp_monitor.modules.empresa.core.domain.model.Sucursal;
-import io.github.roony11_1.temp_monitor.modules.empresa.core.domain.repository.IEmpresaRepository;
-import io.github.roony11_1.temp_monitor.modules.empresa.core.domain.repository.ISucursalRepository;
+import io.github.roony11_1.temp_monitor.modules.empresa.core.domain.repository.EmpresaRepository;
+import io.github.roony11_1.temp_monitor.modules.empresa.core.domain.repository.SucursalRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-@ApplicationScoped
+import java.time.Instant;
+import java.util.List;
+
+@Service
 @RequiredArgsConstructor
-public class SucursalService 
-{
-    private final ISucursalRepository sucursalRepository;
-    private final IEmpresaRepository empresaRepository;
+public class SucursalService {
 
-    public List<Sucursal> listarTodas() 
-    {
-        return sucursalRepository.listAll();
+    private final SucursalRepository sucursalRepository;
+    private final EmpresaRepository empresaRepository;
+
+    public List<Sucursal> listarTodas() {
+        return sucursalRepository.findAll();
     }
 
-    public List<Sucursal> listarPorEmpresa(Long empresaId) 
-    {
+    public List<Sucursal> listarPorEmpresa(Long empresaId) {
         return sucursalRepository.findByEmpresaId(empresaId);
     }
 
-    public Sucursal buscarPorId(Long id) 
-    {
-        return sucursalRepository.findByIdOptional(id)
+    public Sucursal buscarPorId(Long id) {
+        return sucursalRepository.findById(id)
                 .orElseThrow(() -> new SucursalNotFoundException("ID " + id));
     }
 
     @Transactional
-    public Sucursal crear(String nombre, String direccion, String telefono, Long empresaId) 
-    {
-        Empresa empresa = empresaRepository.findByIdOptional(empresaId)
+    public Sucursal crear(String nombre, String direccion, String telefono, Long empresaId) {
+        Empresa empresa = empresaRepository.findById(empresaId)
                 .orElseThrow(() -> new EmpresaNotFoundException("ID " + empresaId));
 
         Sucursal sucursal = Sucursal.builder()
@@ -51,32 +46,27 @@ public class SucursalService
                 .activo(true)
                 .build();
 
-        sucursalRepository.save(sucursal);
-        return sucursal;
+        return sucursalRepository.save(sucursal);
     }
 
     @Transactional
-    public Sucursal actualizar(Long id, String nombre, String direccion, String telefono, Long empresaId) 
-    {
+    public Sucursal actualizar(Long id, String nombre, String direccion, String telefono, Long empresaId) {
         Sucursal sucursal = buscarPorId(id);
 
         sucursal.setNombre(nombre);
         sucursal.setDireccion(direccion);
         sucursal.setTelefono(telefono);
-        if (empresaId != null) 
-        {
-            Empresa empresa = empresaRepository.findByIdOptional(empresaId)
+        if (empresaId != null) {
+            Empresa empresa = empresaRepository.findById(empresaId)
                     .orElseThrow(() -> new EmpresaNotFoundException("ID " + empresaId));
             sucursal.setEmpresa(empresa);
         }
         sucursal.setUpdatedAt(Instant.now());
-        sucursalRepository.save(sucursal);
-        return sucursal;
+        return sucursalRepository.save(sucursal);
     }
 
     @Transactional
-    public void activar(Long id) 
-    {
+    public void activar(Long id) {
         Sucursal sucursal = buscarPorId(id);
         sucursal.setActivo(true);
         sucursal.setUpdatedAt(Instant.now());
@@ -84,8 +74,7 @@ public class SucursalService
     }
 
     @Transactional
-    public void desactivar(Long id) 
-    {
+    public void desactivar(Long id) {
         Sucursal sucursal = buscarPorId(id);
         sucursal.setActivo(false);
         sucursal.setUpdatedAt(Instant.now());
@@ -93,8 +82,7 @@ public class SucursalService
     }
 
     @Transactional
-    public void eliminar(Long id) 
-    {
+    public void eliminar(Long id) {
         var sucursal = buscarPorId(id);
         sucursalRepository.delete(sucursal);
     }

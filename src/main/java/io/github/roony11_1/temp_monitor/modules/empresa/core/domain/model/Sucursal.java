@@ -1,20 +1,9 @@
 package io.github.roony11_1.temp_monitor.modules.empresa.core.domain.model;
 
-import java.time.Instant;
+import jakarta.persistence.*;
+import lombok.*;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import java.time.Instant;
 
 @Entity
 @Table(name = "sucursales")
@@ -23,13 +12,16 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode(callSuper = false)
-public class Sucursal extends PanacheEntity
-{
+public class Sucursal {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Column(nullable = false)
     private String nombre;
 
     private String direccion;
-
     private String telefono;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -44,9 +36,4 @@ public class Sucursal extends PanacheEntity
     private Instant createdAt = Instant.now();
 
     private Instant updatedAt;
-
-    public Long getId()
-    {
-        return this.id;
-    }
 }

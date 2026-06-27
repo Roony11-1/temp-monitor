@@ -4,33 +4,28 @@ import io.github.roony11_1.error.core.exceptions.InternalErrorException;
 import io.github.roony11_1.temp_monitor.kernel.security.jwt.JwtGenerator;
 import io.github.roony11_1.temp_monitor.kernel.security.model.TokenUser;
 import io.github.roony11_1.temp_monitor.kernel.security.service.IUserCredentialsService;
-import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
-@ApplicationScoped
+@Service
 @RequiredArgsConstructor
 @Slf4j
-public class AuthService 
-{
+public class AuthService {
+
     private final IUserCredentialsService userCredentialsService;
     private final JwtGenerator jwtGenerator;
 
-    public String login(String email, String password) 
-    {
+    public String login(String email, String password) {
         log.info("Intento de login para email: {}", email);
 
         TokenUser user = userCredentialsService.authenticate(email, password);
 
-        try 
-        {
+        try {
             String token = jwtGenerator.generate(user);
             log.info("Login exitoso para email: {}", email);
-            
             return token;
-        } 
-        catch (Exception e) 
-        {
+        } catch (Exception e) {
             throw new InternalErrorException("generar el token JWT", e);
         }
     }

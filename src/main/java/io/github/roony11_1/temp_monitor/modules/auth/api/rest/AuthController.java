@@ -3,36 +3,29 @@ package io.github.roony11_1.temp_monitor.modules.auth.api.rest;
 import io.github.roony11_1.temp_monitor.modules.auth.api.dto.LoginRequest;
 import io.github.roony11_1.temp_monitor.modules.auth.api.dto.LoginResponse;
 import io.github.roony11_1.temp_monitor.modules.auth.core.application.AuthService;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@Path("/auth")
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
+@RestController
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 @Slf4j
-public class AuthResource 
-{
+public class AuthController {
+
     private final AuthService authService;
 
-    @POST
-    @Path("/login")
-    public Response login(LoginRequest request) 
-    {
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         log.info("Intento de login para email: {}", request.getEmail());
 
         String token = authService.login(request.getEmail(), request.getPassword());
-        
+
         LoginResponse response = new LoginResponse();
         response.setToken(token);
         response.setEmail(request.getEmail());
-        
-        return Response.ok(response).build();
+
+        return ResponseEntity.ok(response);
     }
 }

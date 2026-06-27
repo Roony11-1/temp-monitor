@@ -1,22 +1,21 @@
 package io.github.roony11_1.temp_monitor.kernel.security.jwt;
 
-import java.util.Base64;
+import io.github.roony11_1.temp_monitor.config.JwtConfig;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.util.Base64;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
+@Component
+@RequiredArgsConstructor
+public class JwtKeyProvider {
 
-@ApplicationScoped
-public class JwtKeyProvider 
-{
-    @ConfigProperty(name = "smallrye.jwt.sign.key")
-    String rawKey;
+    private final JwtConfig jwtConfig;
 
-    public SecretKey getHmacKey() 
-    {
-        byte[] decoded = Base64.getDecoder().decode(rawKey);
+    public SecretKey getHmacKey() {
+        byte[] decoded = Base64.getDecoder().decode(jwtConfig.getSecret());
         return new SecretKeySpec(decoded, "HmacSHA256");
     }
 }

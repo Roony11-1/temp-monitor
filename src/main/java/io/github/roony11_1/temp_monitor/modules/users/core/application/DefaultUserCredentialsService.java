@@ -1,7 +1,5 @@
 package io.github.roony11_1.temp_monitor.modules.users.core.application;
 
-import java.time.Instant;
-
 import io.github.roony11_1.temp_monitor.kernel.security.crypto.PasswordHasher;
 import io.github.roony11_1.temp_monitor.kernel.security.model.TokenUser;
 import io.github.roony11_1.temp_monitor.kernel.security.service.IUserCredentialsService;
@@ -9,32 +7,31 @@ import io.github.roony11_1.temp_monitor.modules.users.core.domain.exceptions.Inv
 import io.github.roony11_1.temp_monitor.modules.users.core.domain.exceptions.UserDisabledException;
 import io.github.roony11_1.temp_monitor.modules.users.core.domain.exceptions.UserNotFoundException;
 import io.github.roony11_1.temp_monitor.modules.users.core.domain.model.Usuario;
-import io.github.roony11_1.temp_monitor.modules.users.core.domain.repository.IUsuarioRepository;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.transaction.Transactional;
+import io.github.roony11_1.temp_monitor.modules.users.core.domain.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-@ApplicationScoped
+import java.time.Instant;
+
+@Service
 @RequiredArgsConstructor
-public class DefaultUserCredentialsService implements IUserCredentialsService 
-{
-    private final IUsuarioRepository usuarioRepository;
+public class DefaultUserCredentialsService implements IUserCredentialsService {
+
+    private final UsuarioRepository usuarioRepository;
     private final PasswordHasher passwordHasher;
 
     @Override
     @Transactional
-    public TokenUser authenticate(String email, String rawPassword) 
-    {
+    public TokenUser authenticate(String email, String rawPassword) {
         Usuario usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException(email));
 
-        if (!usuario.isActivo()) 
-        {
+        if (!usuario.isActivo()) {
             throw new UserDisabledException();
         }
 
-        if (!passwordHasher.verify(rawPassword, usuario.getPasswordHash())) 
-        {
+        if (!passwordHasher.verify(rawPassword, usuario.getPasswordHash())) {
             throw new InvalidCredentialsException();
         }
 

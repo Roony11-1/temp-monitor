@@ -1,37 +1,33 @@
 package io.github.roony11_1.temp_monitor.modules.empresa.core.application;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.transaction.Transactional;
+import io.github.roony11_1.temp_monitor.modules.empresa.core.domain.exceptions.EmpresaNotFoundException;
+import io.github.roony11_1.temp_monitor.modules.empresa.core.domain.exceptions.NombreEmpresaAlreadyExistsException;
+import io.github.roony11_1.temp_monitor.modules.empresa.core.domain.model.Empresa;
+import io.github.roony11_1.temp_monitor.modules.empresa.core.domain.repository.EmpresaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
 
-import io.github.roony11_1.temp_monitor.modules.empresa.core.domain.exceptions.EmpresaNotFoundException;
-import io.github.roony11_1.temp_monitor.modules.empresa.core.domain.exceptions.NombreEmpresaAlreadyExistsException;
-import io.github.roony11_1.temp_monitor.modules.empresa.core.domain.model.Empresa;
-import io.github.roony11_1.temp_monitor.modules.empresa.core.domain.repository.IEmpresaRepository;
-
-@ApplicationScoped
+@Service
 @RequiredArgsConstructor
-public class EmpresaService 
-{
-    private final IEmpresaRepository empresaRepository;
+public class EmpresaService {
 
-    public List<Empresa> listarTodas() 
-    {
-        return empresaRepository.listAll();
+    private final EmpresaRepository empresaRepository;
+
+    public List<Empresa> listarTodas() {
+        return empresaRepository.findAll();
     }
 
-    public Empresa buscarPorId(Long id) 
-    {
-        return empresaRepository.findByIdOptional(id)
+    public Empresa buscarPorId(Long id) {
+        return empresaRepository.findById(id)
                 .orElseThrow(() -> new EmpresaNotFoundException("ID " + id));
     }
 
     @Transactional
-    public Empresa crear(String nombre, String direccion, String telefono, String email) 
-    {
+    public Empresa crear(String nombre, String direccion, String telefono, String email) {
         if (empresaRepository.existsByNombre(nombre))
             throw new NombreEmpresaAlreadyExistsException(nombre);
 
@@ -43,13 +39,11 @@ public class EmpresaService
                 .activo(true)
                 .build();
 
-        empresaRepository.save(empresa);
-        return empresa;
+        return empresaRepository.save(empresa);
     }
 
     @Transactional
-    public Empresa actualizar(Long id, String nombre, String direccion, String telefono, String email) 
-    {
+    public Empresa actualizar(Long id, String nombre, String direccion, String telefono, String email) {
         Empresa empresa = buscarPorId(id);
 
         empresa.setNombre(nombre);
@@ -57,13 +51,11 @@ public class EmpresaService
         empresa.setTelefono(telefono);
         empresa.setEmail(email);
         empresa.setUpdatedAt(Instant.now());
-        empresaRepository.save(empresa);
-        return empresa;
+        return empresaRepository.save(empresa);
     }
 
     @Transactional
-    public void activar(Long id) 
-    {
+    public void activar(Long id) {
         Empresa empresa = buscarPorId(id);
         empresa.setActivo(true);
         empresa.setUpdatedAt(Instant.now());
@@ -71,8 +63,7 @@ public class EmpresaService
     }
 
     @Transactional
-    public void desactivar(Long id) 
-    {
+    public void desactivar(Long id) {
         Empresa empresa = buscarPorId(id);
         empresa.setActivo(false);
         empresa.setUpdatedAt(Instant.now());
@@ -80,8 +71,7 @@ public class EmpresaService
     }
 
     @Transactional
-    public void eliminar(Long id) 
-    {
+    public void eliminar(Long id) {
         var empresa = buscarPorId(id);
         empresaRepository.delete(empresa);
     }

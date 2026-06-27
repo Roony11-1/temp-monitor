@@ -1,21 +1,11 @@
 package io.github.roony11_1.temp_monitor.modules.empresa.core.domain.model;
 
+import jakarta.persistence.*;
+import lombok.*;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Entity
 @Table(name = "empresas")
@@ -24,20 +14,22 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode(callSuper = false)
-public class Empresa extends PanacheEntity
-{
-    @Column(nullable = false)
+public class Empresa {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true)
     private String nombre;
 
     private String direccion;
-
     private String telefono;
-
     private String email;
 
-    @OneToMany(mappedBy = "empresa", fetch = FetchType.LAZY)
-    @ToString.Exclude
+    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
+    @ToString.Exclude
     private List<Sucursal> sucursales = new ArrayList<>();
 
     @Builder.Default
@@ -47,9 +39,4 @@ public class Empresa extends PanacheEntity
     private Instant createdAt = Instant.now();
 
     private Instant updatedAt;
-
-    public Long getId()
-    {
-        return this.id;
-    }
 }
