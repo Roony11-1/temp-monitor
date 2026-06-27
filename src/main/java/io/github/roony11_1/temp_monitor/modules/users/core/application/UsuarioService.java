@@ -70,7 +70,7 @@ public class UsuarioService {
                 .email(email)
                 .passwordHash(passwordHasher.hash(password))
                 .nombre(nombre)
-                .roles(roles)
+                .roles(new java.util.HashSet<>(roles))
                 .empresaId(empresaId)
                 .sucursalId(sucursalId)
                 .activo(true)
